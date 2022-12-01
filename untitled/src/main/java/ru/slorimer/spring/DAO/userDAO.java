@@ -13,10 +13,10 @@ public class userDAO {
 
     {
         userList = new ArrayList<>();
-        userList.add(new User(++PEOPLE_COUnT, "tom"));
-        userList.add(new User(++PEOPLE_COUnT, "tom1"));
-        userList.add(new User(++PEOPLE_COUnT, "tom2"));
-        userList.add(new User(++PEOPLE_COUnT, "tom3"));
+        userList.add(new User(++PEOPLE_COUnT, "tom", 18, "emae@mail.ru"));
+        userList.add(new User(++PEOPLE_COUnT, "tom1", 48, "blin@mail.ru"));
+        userList.add(new User(++PEOPLE_COUnT, "tom2", 95, "negr@mail.ru"));
+        userList.add(new User(++PEOPLE_COUnT, "tom3", 10, "babyshka228@mail.ru"));
     }
     public List<User> index(){
         return userList;
@@ -31,6 +31,8 @@ public class userDAO {
     public void edit(int id, User newUser){
         User userToBeEdited = show(id);
         userToBeEdited.setName(newUser.getName());
+        userToBeEdited.setAge(newUser.getAge());
+        userToBeEdited.setEmail(newUser.getEmail());
     }
     public void delete(int id){
         userList.removeIf(u -> u.getId() == id);

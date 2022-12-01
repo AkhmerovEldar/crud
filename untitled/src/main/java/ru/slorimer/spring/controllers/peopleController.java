@@ -2,9 +2,12 @@ package ru.slorimer.spring.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.slorimer.spring.DAO.userDAO;
 import ru.slorimer.spring.model.User;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -27,12 +30,13 @@ public class peopleController {
         return "people/show";
     }
     @GetMapping("/new")
-    public String newPerson(Model model){
-        model.addAttribute("person", new User());
+    public String newPerson(@ModelAttribute("person") User user){
         return "people/new";
     }
     @PostMapping()
-    public String create(@ModelAttribute("person") User user){
+    public String create(@ModelAttribute("person") @Valid User user, BindingResult bindingResult){
+        if(bindingResult.hasErrors())
+            return "people/new";
         userdAO.save(user);
         return "redirect:/people";
     }
@@ -42,7 +46,9 @@ public class peopleController {
         return "people/edit";
     }
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("person") User user, @PathVariable("id") int id){
+    public String update(@ModelAttribute("person") @Valid User user, BindingResult bindingResult, @PathVariable("id") int id){
+        if (bindingResult.hasErrors())
+            return "people/edit";
         userdAO.edit(id, user);
         return "redirect:/people";
     }
