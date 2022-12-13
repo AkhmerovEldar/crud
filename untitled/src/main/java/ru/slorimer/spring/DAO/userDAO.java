@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.slorimer.spring.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class userDAO {
@@ -23,6 +24,10 @@ public class userDAO {
     public User show(int id){
         return jdbcTemplate.query("SELECT * FROM person WHERE id=?", new Object[]{id}, new BeanPropertyRowMapper<>(User.class))
                 .stream().findAny().orElse(null);
+    }
+    public Optional<User> show(String email){
+        return jdbcTemplate.query("SELECT * FROM person WHERE email=?", new Object[]{email}, new BeanPropertyRowMapper<>(User.class))
+                .stream().findAny();
     }
     public void save(User user){
         jdbcTemplate.update("INSERT INTO person(name, age, email) VALUES(?, ?, ?)", user.getName(),

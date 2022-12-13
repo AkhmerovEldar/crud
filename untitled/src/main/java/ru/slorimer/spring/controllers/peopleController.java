@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.slorimer.spring.DAO.userDAO;
 import ru.slorimer.spring.model.User;
+import ru.slorimer.spring.util.PersonValidator;
 
 import javax.validation.Valid;
 
@@ -13,10 +14,12 @@ import javax.validation.Valid;
 @RequestMapping("/people")
 public class peopleController {
     private userDAO userdAO;
+    private PersonValidator personValidator;
 
 
-    public peopleController(userDAO userdAO) {
+    public peopleController(userDAO userdAO, PersonValidator personValidator) {
         this.userdAO = userdAO;
+        this.personValidator = personValidator;
     }
 
     @GetMapping()
@@ -35,6 +38,7 @@ public class peopleController {
     }
     @PostMapping()
     public String create(@ModelAttribute("person") @Valid User user, BindingResult bindingResult){
+        personValidator.validate(user, bindingResult);
         if(bindingResult.hasErrors())
             return "people/new";
         userdAO.save(user);
@@ -47,6 +51,7 @@ public class peopleController {
     }
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid User user, BindingResult bindingResult, @PathVariable("id") int id){
+        personValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors())
             return "people/edit";
         userdAO.edit(id, user);
